@@ -1,0 +1,43 @@
+<cdk-virtual-scroll-viewport tvsItemSize="48" class="wrapper mat-elevation-z2">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" #demomatdatatable>
+
+    <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef class="col-sm">
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row" class="col-sm">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+
+    <!-- Weight Column -->
+    <ng-container *ngFor="let col of displayedColumns; let c = index;" [matColumnDef]="col">
+      <th mat-header-cell *matHeaderCellDef> {{ col }} </th>
+      <td mat-cell class="col-sm" *matCellDef="let element; let r = index;"
+        [matCellKeyboardSelection]="this.selectionCell" [matTable]="demomatdatatable" [token]="element['id']"
+        [rowIndex]="r" [colIndex]="c" [ngClass]="{selected: selectionCell.isSelected(element['id'] + '-' + c)}"
+        [colLength]="displayedColumns.length">
+        <span  style="">   {{'Valor: ' + element[col] + '- Row: ' + r + ',Col: ' + c}} </span>
+
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row #demmatrow *matRowDef="let row; columns: displayedColumns;">
+    </tr>
+    <!--  [matRowKeyboardSelection]="this.selection" [rowModel]="row" [matTable]="demomatdatatable" [row]="demmatrow"
+    [ngClass]="{selected: selection.isSelected(row)}" -->
+  </table>
+
+</cdk-virtual-scroll-viewport>
